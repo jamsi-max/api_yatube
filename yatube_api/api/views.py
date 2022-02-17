@@ -1,22 +1,9 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions, viewsets
+from rest_framework import viewsets
 
+from .permissions import IfUserIsAuthor
 from posts.models import Group, Post
 from .serializers import CommentSerializer, GroupSerializer, PostSerializer
-
-
-class IfUserIsAuthor(permissions.BasePermission):
-    message = 'Изменение чужого контента запрещено!'
-
-    def has_permission(self, request, view):
-        if request.user.is_authenticated:
-            return True
-        return False
-
-    def has_object_permission(self, request, view, obj):
-        if obj.author != request.user:
-            return False
-        return True
 
 
 class PostViewSet(viewsets.ModelViewSet):
